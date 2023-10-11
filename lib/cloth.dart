@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -10,15 +9,15 @@ class Cloth {
   Cloth() {
     for (int y = 0; y <= clothHeight; y++) {
       for (int x = 0; x <= clothWidth; x++) {
-        final Point point = Point(startX + x * spacing, startY + y * spacing);
+        final Point point =
+            Point(Offset(start.dx + x * spacing, start.dy + y * spacing));
 
         if (x != 0) {
           point.attach(_points[_points.length - 1]);
         }
 
         if (y == 0) {
-          point.pinX = point.x;
-          point.pinY = point.y;
+          point.pinPosition = point.position;
         }
 
         if (y != 0) {
@@ -91,11 +90,9 @@ class Cloth {
   }
 
   Color _getHeatmapColor(int i, double minDist, double maxDist, Paint paint) {
-    final double diffX = _points[i].x - _points[i].pointerX;
-    final double diffY = _points[i].y - _points[i].pointerY;
-    final double dist = sqrt(diffX * diffX + diffY * diffY);
-
-    final double value = _mapValue(dist, minDist, maxDist, 0, 1);
+    final Offset difference = _points[i].position - _points[i].pointerPosition;
+    final double distance = difference.distance;
+    final double value = _mapValue(distance, minDist, maxDist, 0, 1);
 
     return HSVColor.fromAHSV(1, 240 * value, 1, 1).toColor();
   }
@@ -125,12 +122,12 @@ class Cloth {
     double max = 0;
 
     for (int i = 0; i < points.length; i++) {
-      final double diffX = points[i].x - points[i].pointerX;
-      final double diffY = points[i].y - points[i].pointerY;
-      final double dist = sqrt(diffX * diffX + diffY * diffY);
+      final Offset difference =
+          _points[i].position - _points[i].pointerPosition;
+      final double distance = difference.distance;
 
-      if (dist > max) {
-        max = dist;
+      if (distance > max) {
+        max = distance;
       }
     }
 
@@ -141,12 +138,12 @@ class Cloth {
     double min = double.infinity;
 
     for (int i = 0; i < points.length; i++) {
-      final double diffX = points[i].x - points[i].pointerX;
-      final double diffY = points[i].y - points[i].pointerY;
-      final double dist = sqrt(diffX * diffX + diffY * diffY);
+      final Offset difference =
+          _points[i].position - _points[i].pointerPosition;
+      final double distance = difference.distance;
 
-      if (dist < min) {
-        min = dist;
+      if (distance < min) {
+        min = distance;
       }
     }
 

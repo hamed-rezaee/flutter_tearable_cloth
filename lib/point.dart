@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter_tearable_cloth/settings.dart';
@@ -6,54 +5,43 @@ import 'package:flutter_tearable_cloth/constraint.dart';
 import 'package:flutter_tearable_cloth/main.dart';
 
 class Point {
-  Point(this.x, this.y) {
-    pointerX = x;
-    pointerY = y;
+  Point(this.position) {
+    pointerPosition = position;
   }
 
-  double x;
-  double y;
+  Offset position;
 
-  double pointerX = 0;
-  double pointerY = 0;
-  double velocityX = 0;
-  double velocityY = 0;
-  double? pinX;
-  double? pinY;
+  Offset pointerPosition = Offset.zero;
+  Offset velocity = Offset.zero;
+  Offset? pinPosition;
 
   List<Constraint> constraints = <Constraint>[];
 
   void update(double delta) {
     if (mouse.mouseDown) {
-      final double diffX = x - mouse.x;
-      final double diffY = y - mouse.y;
-      final double dist = sqrt(diffX * diffX + diffY * diffY);
+      final Offset difference = position - mouse.position;
+      final double distance = difference.distance;
 
       if (mouse.isLeftButton) {
-        if (dist < mouseInfluence) {
-          pointerX = x - (mouse.x - mouse.previousX);
-          pointerY = y - (mouse.y - mouse.previousY);
+        if (distance < mouseInfluence) {
+          pointerPosition =
+              position - (mouse.position - mouse.previousPosition);
         }
-      } else if (dist < mouseCut) {
+      } else if (distance < mouseCut) {
         constraints.clear();
       }
     }
 
-    addForce(0, gravity);
+    addForce(const Offset(0, gravity));
 
-    final double nextX =
-        x + ((x - pointerX) * friction) + ((velocityX / 2) * delta * delta);
-    final double nextY =
-        y + ((y - pointerY) * friction) + ((velocityY / 2) * delta * delta);
+    Offset nextPosition = position +
+        ((position - pointerPosition) * friction) +
+        (velocity * 0.5 * delta * delta);
 
-    pointerX = x;
-    pointerY = y;
+    pointerPosition = position;
+    position = nextPosition;
 
-    x = nextX;
-    y = nextY;
-
-    velocityY = 0;
-    velocityX = 0;
+    velocity = Offset.zero;
   }
 
   void draw(Canvas canvas, Paint paint, PointMode pointMode) {
@@ -67,9 +55,8 @@ class Point {
   }
 
   void resolveConstraints() {
-    if (pinX != null && pinY != null) {
-      x = pinX!;
-      y = pinY!;
+    if (pinPosition != null) {
+      position = pinPosition!;
 
       return;
     }
@@ -79,6 +66,9 @@ class Point {
     while (i-- > 0) {
       constraints[i].resolve();
     }
+
+    double x = position.dx;
+    double y = position.dy;
 
     if (x > canvasWidth - 1) {
       x = 2 * (canvasWidth - 1) - x;
@@ -91,6 +81,8 @@ class Point {
     } else if (y > canvasHeight - 1) {
       y = 2 * (canvasHeight - 1) - y;
     }
+
+    position = Offset(x, y);
   }
 
   void attach(Point point) => constraints.add(Constraint(this, point));
@@ -101,8 +93,5 @@ class Point {
     constraints.removeAt(index);
   }
 
-  void addForce(double x, double y) {
-    velocityX += x;
-    velocityY += y;
-  }
+  void addForce(Offset force) => velocity += force;
 }

@@ -47,28 +47,10 @@ class _AppState extends State<App> {
                   style: TextStyle(fontSize: 16),
                 ),
                 Listener(
-                  onPointerDown: (PointerDownEvent event) {
-                    mouse.mouseDown = true;
-                    mouse.isLeftButton = event.buttons == kPrimaryMouseButton;
-                  },
-                  onPointerUp: (PointerUpEvent event) {
-                    mouse.mouseDown = false;
-                    mouse.isLeftButton = false;
-                  },
-                  onPointerMove: (PointerMoveEvent event) {
-                    mouse.previousX = mouse.x;
-                    mouse.previousY = mouse.y;
-
-                    mouse.x = event.localPosition.dx;
-                    mouse.y = event.localPosition.dy;
-                  },
-                  onPointerHover: (PointerHoverEvent event) {
-                    mouse.previousX = mouse.x;
-                    mouse.previousY = mouse.y;
-
-                    mouse.x = event.localPosition.dx;
-                    mouse.y = event.localPosition.dy;
-                  },
+                  onPointerDown: _handlePointerDown,
+                  onPointerUp: _handlePointerUp,
+                  onPointerMove: _handlePointerMove,
+                  onPointerHover: _handlePointerHover,
                   child: CustomPaint(
                     size: const Size(canvasWidth, canvasHeight),
                     painter: ClothPainter(
@@ -83,4 +65,24 @@ class _AppState extends State<App> {
           ),
         ),
       );
+
+  void _handlePointerDown(PointerDownEvent event) {
+    mouse.mouseDown = true;
+    mouse.isLeftButton = event.buttons == kPrimaryMouseButton;
+  }
+
+  void _handlePointerUp(PointerUpEvent event) {
+    mouse.mouseDown = false;
+    mouse.isLeftButton = false;
+  }
+
+  void _handlePointerMove(PointerMoveEvent event) {
+    mouse.previousPosition = mouse.position;
+    mouse.position = event.localPosition;
+  }
+
+  void _handlePointerHover(PointerHoverEvent event) {
+    mouse.previousPosition = mouse.position;
+    mouse.position = event.localPosition;
+  }
 }

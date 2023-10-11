@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter_tearable_cloth/settings.dart';
@@ -11,29 +10,20 @@ class Constraint {
   double length;
 
   void resolve() {
-    final double diffX = p1.x - p2.x;
-    final double diffY = p1.y - p2.y;
-    final double dist = sqrt(diffX * diffX + diffY * diffY);
-    final double diff = (length - dist) / dist;
+    final Offset difference = p1.position - p2.position;
+    final double distance = difference.distance;
+    final double distanceRatio = (length - distance) / distance;
 
-    if (dist > tearDistance) {
+    if (distance > tearDistance) {
       p1.removeConstraint(this);
     }
 
-    final double px = diffX * diff * 0.5;
-    final double py = diffY * diff * 0.5;
+    final Offset offset = difference * distanceRatio * 0.5;
 
-    p1.x += px;
-    p1.y += py;
-    p2.x -= px;
-    p2.y -= py;
+    p1.position += offset;
+    p2.position -= offset;
   }
 
-  void draw(Canvas canvas, Paint paint, PointMode pointMode) {
-    canvas.drawPoints(
-      pointMode,
-      <Offset>[Offset(p1.x, p1.y), Offset(p2.x, p2.y)],
-      paint,
-    );
-  }
+  void draw(Canvas canvas, Paint paint, PointMode pointMode) =>
+      canvas.drawPoints(pointMode, <Offset>[p1.position, p2.position], paint);
 }
