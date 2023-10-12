@@ -12,6 +12,8 @@ This documentation provides an overview of the classes and their roles, each cla
 4. [Constraint Class](#constraint-class)
 5. [Pointer Class](#pointer-class)
 6. [Settings](#settings)
+7. [Inspiration](#inspiration)
+8. [License](#license)
 
 ## ClothPainter Class
 
