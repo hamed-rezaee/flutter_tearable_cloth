@@ -3,14 +3,17 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_tearable_cloth/point.dart';
+import 'package:flutter_tearable_cloth/pointer.dart';
 import 'package:flutter_tearable_cloth/settings.dart';
 
 class Cloth {
-  Cloth() {
+  Cloth(Pointer pointer) {
     for (int y = 0; y <= clothHeight; y++) {
       for (int x = 0; x <= clothWidth; x++) {
-        final Point point =
-            Point(Offset(start.dx + x * spacing, start.dy + y * spacing));
+        final Point point = Point(
+          Offset(start.dx + x * spacing, start.dy + y * spacing),
+          pointer,
+        );
 
         if (x != 0) {
           point.attach(_points[_points.length - 1]);

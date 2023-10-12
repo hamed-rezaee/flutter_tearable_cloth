@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Mouse {
-  bool mouseDown = false;
-  bool isLeftButton = false;
+class Pointer {
+  bool pressed = false;
+  bool isActionPressed = false;
 
   Offset position = Offset.zero;
   Offset previousPosition = Offset.zero;

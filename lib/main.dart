@@ -6,10 +6,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_tearable_cloth/cloth.dart';
 import 'package:flutter_tearable_cloth/cloth_painter.dart';
+import 'package:flutter_tearable_cloth/pointer.dart';
 import 'package:flutter_tearable_cloth/settings.dart';
-import 'package:flutter_tearable_cloth/mouse.dart';
-
-Mouse mouse = Mouse();
 
 void main() => runApp(const App());
 
@@ -21,11 +19,15 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  Cloth cloth = Cloth();
+  final Pointer pointer = Pointer();
+
+  late final Cloth cloth;
 
   @override
   void initState() {
     super.initState();
+
+    cloth = Cloth(pointer);
 
     Timer.periodic(
       const Duration(milliseconds: 16),
@@ -67,22 +69,22 @@ class _AppState extends State<App> {
       );
 
   void _handlePointerDown(PointerDownEvent event) {
-    mouse.mouseDown = true;
-    mouse.isLeftButton = event.buttons == kPrimaryMouseButton;
+    pointer.pressed = true;
+    pointer.isActionPressed = event.buttons == kPrimaryMouseButton;
   }
 
   void _handlePointerUp(PointerUpEvent event) {
-    mouse.mouseDown = false;
-    mouse.isLeftButton = false;
+    pointer.pressed = false;
+    pointer.isActionPressed = false;
   }
 
   void _handlePointerMove(PointerMoveEvent event) {
-    mouse.previousPosition = mouse.position;
-    mouse.position = event.localPosition;
+    pointer.previousPosition = pointer.position;
+    pointer.position = event.localPosition;
   }
 
   void _handlePointerHover(PointerHoverEvent event) {
-    mouse.previousPosition = mouse.position;
-    mouse.position = event.localPosition;
+    pointer.previousPosition = pointer.position;
+    pointer.position = event.localPosition;
   }
 }

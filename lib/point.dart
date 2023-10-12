@@ -1,13 +1,15 @@
 import 'dart:ui';
 
-import 'package:flutter_tearable_cloth/settings.dart';
 import 'package:flutter_tearable_cloth/constraint.dart';
-import 'package:flutter_tearable_cloth/main.dart';
+import 'package:flutter_tearable_cloth/pointer.dart';
+import 'package:flutter_tearable_cloth/settings.dart';
 
 class Point {
-  Point(this.position) {
+  Point(this.position, this.pointer) {
     pointerPosition = position;
   }
+
+  final Pointer pointer;
 
   Offset position;
 
@@ -18,14 +20,14 @@ class Point {
   List<Constraint> constraints = <Constraint>[];
 
   void update(double delta) {
-    if (mouse.mouseDown) {
-      final Offset difference = position - mouse.position;
+    if (pointer.pressed) {
+      final Offset difference = position - pointer.position;
       final double distance = difference.distance;
 
-      if (mouse.isLeftButton) {
+      if (pointer.isActionPressed) {
         if (distance < mouseInfluence) {
           pointerPosition =
-              position - (mouse.position - mouse.previousPosition);
+              position - (pointer.position - pointer.previousPosition);
         }
       } else if (distance < mouseCut) {
         constraints.clear();
