@@ -15,5 +15,5 @@ const double tearDistance = 50;
 const Offset start =
     Offset(canvasWidth * 0.5 - (clothWidth * spacing) * 0.5, 20);
 
-const double mouseInfluence = 40;
-const double mouseCut = 7;
+const double pointerInfluence = 40;
+const double pointerCut = 7;

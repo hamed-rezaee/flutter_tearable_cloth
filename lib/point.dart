@@ -25,11 +25,11 @@ class Point {
       final double distance = difference.distance;
 
       if (pointer.isActionPressed) {
-        if (distance < mouseInfluence) {
+        if (distance < pointerInfluence) {
           pointerPosition =
               position - (pointer.position - pointer.previousPosition);
         }
-      } else if (distance < mouseCut) {
+      } else if (distance < pointerCut) {
         constraints.clear();
       }
     }
